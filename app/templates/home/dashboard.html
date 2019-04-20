@@ -1,0 +1,83 @@
+{% import "bootstrap/utils.html" as utils %}
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block body %}
+<div class="content-section">
+    <div class="outer">
+      <div class="middle">
+        <div class="inner">
+            
+          {{ utils.flashed_messages()}}
+          <h1 style="text-align:center;">Welcome back, {{current_user.username}}!</h1>
+          <h1 style="text-align:center;">Here's the list of domains available on the system</h1>  
+          <p style="text-align:center;"> Note: Freshly started VM will have higher RAM size than configured size. <br> This is normal and is part of system operation and will return to configured values</p>
+          {% if vm_list %}
+            <hr class="intro-divider">
+            <div class="center">
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th width="20%"> VM Name </th>
+                    <th width="20%"> Memory Size </th>
+                    <th width="10%"> vCPUs </th>
+                    <th width="20%"> State </th>
+                    <th width="40%"> Actions </th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for vm in vm_list %}
+                  <tr>
+                    <td> {{ vm[0] }} </td>
+                    <td> {{ vm[2]+" MB" }} </td>
+                    <td>
+                        {{ vm[3] }}
+                    </td>
+                    <td>
+                        {{vm [1]}}
+                    </td>
+                    <td>
+                        {% if vm[5] == 1 %}
+                        <a class="dangerous" href="{{ url_for('vms.vm_shutdown', vm_uuid=vm[4]) }}">
+                            <i class="fa fa-power-off dangerous"></i> Shut Down 
+                        </a><br>
+                        <a class="dangerous" href="{{ url_for('vms.vm_poweroff', vm_uuid=vm[4]) }}">
+                            <i class="fa fa-plug dangerous"></i> Power Off 
+                        </a><br>
+                        <a href="{{ url_for('vms.vm_detail', vm_uuid=vm[4]) }}">
+                            <i class="fa fa-info-circle"></i> View Details
+                        </a><br><br>
+                        {% else %}
+                        <a href="{{ url_for('vms.vm_start', vm_uuid=vm[4]) }}">
+                            <i class="fa fa-power-off"></i> Start VM
+                        </a><br>
+                        <a href="{{ url_for('vms.vm_modify', vm_uuid=vm[4]) }}">
+                            <i class="fa fa-wrench"></i> Modify Settings 
+                        </a><br>
+                        <a href="{{ url_for('vms.vm_snapshot', vm_uuid=vm[4]) }}">
+                            <i class="fa fa-plus"></i> Create Snapshot
+                        </a><br>
+                        <a href="{{ url_for('vms.vm_detail', vm_uuid=vm[4]) }}">
+                            <i class="fa fa-info-circle"></i> View Details
+                        </a><br>
+                        <a class="dangerous" href="{{ url_for('vms.vm_delete', vm_uuid=vm[4]) }}">
+                            <i class="fa fa-trash dangerous"></i> Delete VM
+                        </a>
+                        {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div style="text-align: center">
+          {% else %}
+            <div style="text-align: center">
+              <h3> No VMs created. </h3>
+              <hr class="intro-divider">
+          {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

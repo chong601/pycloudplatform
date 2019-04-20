@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}VM Detail for {{vm_detail[0]}}{% endblock %}
+{% block body %}
+<div class="content-section">
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <div class="center">
+                <h1 style="text-align:center;">VM Details for {{vm_detail[0]}}</h1>
+                <p>Name: {{vm_detail[0]}}</p>
+                <p>State: {{vm_detail[1]}}</p>
+                <p>Memory Size: {{vm_detail[2]}}</p>
+                <p>vCPUs: {{vm_detail[3]}}</p>
+                <p>UUID: {{vm_detail[4]}}</p>
+                <a href="{{ url_for('home.dashboard')}}"><i class="fa fa-home"></i> Return to Dashboard</a><br>
+                {% if vm_detail[5] == 1 %}
+                <a class="dangerous" href="{{ url_for('vms.vm_shutdown', vm_uuid=vm_detail[4]) }}">
+                    <i class="fa fa-power-off dangerous"></i> Shut Down 
+                </a><br>
+                <a class="dangerous" href="{{ url_for('vms.vm_poweroff', vm_uuid=vm_detail[4]) }}">
+                    <i class="fa fa-plug dangerous"></i> Power Off 
+                </a>
+                {% else %}
+                <a href="{{ url_for('vms.vm_start', vm_uuid=vm_detail[4]) }}">
+                    <i class="fa fa-power-off"></i> Start VM
+                </a><br>
+                <a href="{{ url_for('vms.vm_modify', vm_uuid=vm_detail[4]) }}">
+                    <i class="fa fa-wrench"></i> Modify Settings 
+                </a><br>
+                <a href="{{ url_for('vms.vm_snapshot', vm_uuid=vm_detail[4]) }}">
+                    <i class="fa fa-plus"></i> Create Snapshot
+                </a>
+                {% endif %}
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

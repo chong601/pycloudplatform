@@ -1,0 +1,26 @@
+<!-- app/templates/admin/departments/department.html -->
+{% import "bootstrap/utils.html" as utils %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+{% block title %}
+{% endblock %}
+{% block body %}
+<div class="content-section">
+ <div class="outer">
+    <div class="middle">
+      <div class="inner">
+            {{utils.flashed_messages()}}
+        <div class="center">
+            
+            <h1 style="text-align: center">Are you <span style="color:red; font-size:2em;">absolutely</span> sure?</h1>
+            <h3 style="text-align: center">Please type in <span style="color:red; font-size:2em;">EXACTLY</span> the<br>virtual machine name below: <br> <span style="font-size:2em;color:#0080FF">{{vm_name}}</span><br> into the box below and click Submit.</h3>
+            <h3 style="text-align: center"><span style="color:red; font-size:2em;">VM disk and ALL snapshots</span> will be <span style="color:red; font-size:2em;">irreversibly deleted</span>.</h3>
+            {{ wtf.quick_form(form) }}
+
+            <div style="text-align: center"><a href="{{url_for('home.dashboard')}}">Or you want to return back to VM listing...</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

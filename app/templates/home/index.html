@@ -1,0 +1,26 @@
+{% import "bootstrap/utils.html" as utils %}
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+<div class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                {{utils.flashed_messages()}}
+                <div class="intro-message">
+                    <h1>Python Cloud Platform</h1>
+                    <h3>Manage your virtual machines using Python!</h3>
+                    <hr class="intro-divider">
+                    {% if current_user.is_authenticated %}
+                    <h3>What do you like to do today?</h3>
+                    <a style="font-size: 1.5em" href="{{url_for('home.dashboard')}}">Check your VMs</a><br>
+                    <a style="font-size: 1.5em" href="{{url_for('auth.logout')}}">Log Out</a>
+                    {% else %}
+                    <a style="font-size: 1.5em" href="{{url_for('auth.login')}}">Let's do something awesome today!</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

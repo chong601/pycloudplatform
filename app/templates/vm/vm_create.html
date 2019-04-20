@@ -1,0 +1,23 @@
+<!-- app/templates/admin/departments/department.html -->
+{% extends "base.html" %}
+{% block title %}
+{% endblock %}
+{% block body %}
+<div class="content-section">
+ <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <div class="center">
+            <h1 style="text-align: center">Do you want to...</h1>
+            <br/>
+            <h1 style="text-align:center"><a style="text-align: center" href="{{url_for('vms.vm_create_type', create_type='template')}}">Create a new VM from a template</a><br></h1>
+            {% if snap_count %}
+                <h1 style="text-align: center"> OR <br> <a style="text-align: center" href="{{url_for('vms.vm_create_type', create_type='snapshot')}}">Clone a VM from an existing snapshot</a></h1>
+            {%endif%}
+            <div style="text-align: center"><a style="text-align: center" href="{{url_for('home.dashboard')}}">Or you want to return back to VM list...</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

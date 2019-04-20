@@ -1,0 +1,58 @@
+<!-- app/templates/admin/departments/departments.html -->
+
+{% import "bootstrap/utils.html" as utils %}
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block body %}
+<div class="content-section">
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <br/>
+        {{ utils.flashed_messages() }}
+        <br/>
+        <h1 style="text-align:center;">{{title}}</h1>
+        {% if template_list %}
+          <hr class="intro-divider">
+          <div class="center">
+            <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th width="40%"> Domain Name </th>
+                  <th width="40%"> Template name </th>
+                  <th width="20%"> Select </th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for template_element in template_list %}
+                <tr>
+                  <td> {{ template_element.domain_name }} </td>
+                  <td> {{ template_element.snapshot_name }} </td>
+                  <td>
+                    <a href="{{url_for('vms.vm_create_setup', create_type=create_type,id=template_element.id)}}">
+                        <i class="fa fa-pencil"></i> Select
+                    </a>
+                  </td>
+                  
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            <div style="text-align: center"><a style="text-align: center" href="{{url_for('home.dashboard')}}">Or you want to return back to VM list...</a></p>
+          </div>
+          <div style="text-align: center">
+        {% else %}
+          <div style="text-align: center">
+            <h3> No templates have been added. </h3>
+            <hr class="intro-divider">
+        {% endif %}
+          <!--<a href="{{ url_for('admin.add_department') }}" class="btn btn-default btn-lg">
+            <i class="fa fa-plus"></i>
+            Add Department
+          </a>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

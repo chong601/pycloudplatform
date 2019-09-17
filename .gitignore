@@ -105,3 +105,7 @@ venv.bak/
 
 # exclude database config file
 instance/config.py
+
+# exclude .vscode folder (let the user themselves to decorate their own VS Code
+# look and feel
+.vscode/

@@ -103,5 +103,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#exclude database config file
+# exclude database config file
 instance/config.py
+
+# exclude .vscode folder (let the user themselves to decorate their own VS Code
+# look and feel
+.vscode/

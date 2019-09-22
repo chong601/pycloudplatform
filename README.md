@@ -18,7 +18,7 @@ It is part of my final year project to develop a web-based virtual machine manag
 
 ## How to run it? 
 - Install Python >=3.7
-- Make sure ZFS is installed and `<pool>/kvm-images` dataset exist
+- Make sure ZFS is installed and `zfs-pool-ubuntu/kvm-images` dataset exist
 - `sudo apt install libvirt-bin virtinst bridge-utils libosinfo-bin libguestfs-tools virt-top python3.7-dev libvirt-dev`
 - git clone this project
 - cd into the folder

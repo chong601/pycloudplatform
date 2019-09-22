@@ -1,3 +1,15 @@
+# ANNOUNCEMENT
+I am planning to get this project to be part of the Hacktoberfest event coming soon next Month.
+There is no particular order of things to add/achieve, but priority is given to:
+- Improve code quality (it is so bad that I refuse to acknowledge that I made this
+- Add all missing features outlined below as they have been ready for **months** and I don't even have time to even make it working in here lol.
+- User auditing
+- Caching (using Redis/Memcached)
+- Ability to run background processes (you can create VMs while editing settings kinda way)
+- "Development" mode (where you can use the platform without logged in
+
+Contributors are welcome, feel free to ask questions on the issue tracker of this project if you have any questions!
+
 # IMPORTANT
 This repository is still in progress on importing to GitHub and refining to remove all hardcoded entries to make it environment-agnostic.
 Using this repository requires ZFS to be installed due to the way the program is developed.

@@ -14,6 +14,7 @@ Jinja2==2.10.1
 libvirt-python==5.2.0
 Mako==1.0.9
 MarkupSafe==1.1.1
+pylint-flask==0.6
 PyMySQL==0.9.3
 python-dateutil==2.8.0
 python-editor==1.0.4

@@ -1,6 +1,7 @@
 import libvirt
 import subprocess
 import operator
+from ..config import Config
 
 LIBVIRT_URI="qemu:///system"
 
@@ -302,12 +303,18 @@ class libvirt_test:
 
     #create
     def cmd_create_vm(self, domain_name, snapshot_name, new_domain_name):
-        zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
-        mountpoint_vm_dataset='/kvm-images/'
-        sourcename=domain_name+'@'+snapshot_name
+        #zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
+        # Fun trick to coax Python to generate trailing slashes, needed to 
+        # provide a valid name for ZFS datasets
+        zfs_vm_dataset='/'.join([Config.ZFS_POOL, Config.ZFS_DATASET, ''])
+        # Same as above, but this one forces a / in the beginning to generate
+        # a valid path for virt-clone
+        mountpoint_vm_dataset='/'.join([Config.ZFS_MOUNTPOINT, '')
+        #sourcename=domain_name+'@'+snapshot_name
+        sourcename='@'.join([domain_name, snapshot_name])
         sourcedataset=zfs_vm_dataset+sourcename
         destdataset=zfs_vm_dataset+new_domain_name
-        destmountpoint='/kvm-images/'+new_domain_name+'/'
+        destmountpoint=mountpoint_vm_dataset+new_domain_name+'/'
         destdisk=destmountpoint+'disk1.img'
         print("ZFS VM dataset is {}".format(zfs_vm_dataset))
         print("VM mountpoint is {}".format(mountpoint_vm_dataset))
@@ -338,7 +345,8 @@ class libvirt_test:
             if dom.state()[0] != 5:
                 return False, "VM "+dom.name()+" is not powered off!"
             dom.undefine()
-            zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
+            #zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
+            zfs_vm_dataset='/'.join([Config.ZFS_POOL, Config.ZFS_DATASET, ''])
             targetdataset=zfs_vm_dataset+dom.name()
             zfs_destroy_result=subprocess.run(['sudo', 'zfs', 'destroy', '-r', targetdataset],capture_output=True,universal_newlines=True)
             zfs_destroy_output=str(zfs_destroy_result.returncode)+', '+zfs_destroy_result.stdout+', '+zfs_destroy_result.stderr
@@ -358,12 +366,16 @@ class libvirt_test:
     #NOTE: requires validation on the model side to make sure the template exists
     def cmd_clone_vm(self, domain_name, snapshot_name, new_domain_name):
         """NOT FINAL"""
-        zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
-        mountpoint_vm_dataset='/kvm-images/'
-        sourcename=domain_name+'@'+snapshot_name
+        #zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
+        zfs_vm_dataset='/'.join([Config.ZFS_POOL, Config.ZFS_DATASET, ''])
+        #mountpoint_vm_dataset='/kvm-images/'
+        mountpoint_vm_dataset='/'.join([Config.ZFS_MOUNTPOINT, '')
+        #sourcename=domain_name+'@'+snapshot_name
+        sourcename='@'.join([domain_name, snapshot_name])
         sourcedataset=zfs_vm_dataset+sourcename
         destdataset=zfs_vm_dataset+new_domain_name
-        destmountpoint='/kvm-images/'+new_domain_name+'/'
+        #destmountpoint='/kvm-images/'+new_domain_name+'/'
+        destmountpoint=mountpoint_vm_dataset+new_domain_name+'/'
         destdisk=destmountpoint+'disk1.img'
         print("ZFS VM dataset is {}".format(zfs_vm_dataset))
         print("VM mountpoint is {}".format(mountpoint_vm_dataset))
@@ -385,8 +397,10 @@ class libvirt_test:
         return True, "VM {} successfully created.".format(new_domain_name)
     
     def cmd_create_snapshot(self, domain_name, snapshot_name):
-        zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
-        targetname=domain_name+'@'+snapshot_name
+        #zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
+        zfs_vm_dataset='/'.join([Config.ZFS_POOL, Config.ZFS_DATASET, ''])
+        #targetname=domain_name+'@'+snapshot_name
+        targetname='@'.join([domain_name, snapshot_name])
         targetdataset=zfs_vm_dataset+targetname
         zfs_snapshot_result=subprocess.run(['zfs', 'snapshot', targetdataset],capture_output=True,universal_newlines=True)
         zfs_snapshot_output=str(zfs_snapshot_result.returncode)+', '+zfs_snapshot_result.stdout+', '+zfs_snapshot_result.stderr
@@ -398,8 +412,9 @@ class libvirt_test:
         return True, domain_name+"@"+snapshot_name
         
     def cmd_destroy_snapshot(self, domain_name, snapshot_name):
-        zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
-        targetname=domain_name+'@'+snapshot_name
+        zfs_vm_dataset='/'.join([Config.ZFS_POOL, Config.ZFS_DATASET, ''])
+        #targetname=domain_name+'@'+snapshot_name
+        targetname='@'.join([domain_name, snapshot_name])
         targetdataset=zfs_vm_dataset+targetname
         clone_result, clone_payload=self.internal_check_has_clones(domain_name)
         if clone_result == True:
@@ -414,7 +429,8 @@ class libvirt_test:
         return True, domain_name+"@"+snapshot_name
 
     def internal_check_has_clones(self, domain_name):
-        zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
+        #zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
+        zfs_vm_dataset='/'.join([Config.ZFS_POOL, Config.ZFS_DATASET, ''])
         targetname=domain_name
         targetdataset=zfs_vm_dataset+targetname
         #zfs get clones -H -o value zfs-pool-libvirt-fyp/kvm-images/vm-ubuntu-bionic-2-server-template-new@finish-install-20190311
@@ -437,7 +453,8 @@ class libvirt_test:
     
     def internal_check_has_parent(self, domain_name):
         #zfs get origin -H -o value zfs-pool-libvirt-fyp/kvm-images/vm-ubuntu-bionic-test-clone-27
-        zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
+        #zfs_vm_dataset='zfs-pool-libvirt-fyp/kvm-images/'
+        zfs_vm_dataset='/'.join([Config.ZFS_POOL, Config.ZFS_DATASET, ''])
         targetdataset=zfs_vm_dataset+domain_name
         zfs_parent_result=subprocess.run(['zfs', 'get', 'origin', '-H', '-o', 'value', targetdataset],capture_output=True,universal_newlines=True)
         zfs_parent_output=str(zfs_parent_result.returncode)+', '+zfs_parent_result.stdout+', '+zfs_parent_result.stderr
